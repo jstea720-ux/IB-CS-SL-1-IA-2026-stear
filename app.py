@@ -4,8 +4,6 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from collections import defaultdict
 from datetime import datetime, timedelta
 import json
-import os
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-fallback")
 
 
 app = Flask(__name__)
@@ -348,3 +346,4 @@ if __name__ == "__main__":
         db.create_all()
 
     app.run(debug=True)
+
