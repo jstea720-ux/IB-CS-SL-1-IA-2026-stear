@@ -4,9 +4,12 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from collections import defaultdict
 from datetime import datetime, timedelta
 import json
+import os
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-fallback")
+
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "to-aaron-love-jackson"
+app.config["SECRET_KEY"] = "ffhjds78yhuii389u3098jd8jdp3w9ud893jw89hw378h87dhw0po"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///workout.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -343,4 +346,5 @@ if __name__ == "__main__":
     # Create database tables the first time the app runs
     with app.app_context():
         db.create_all()
+
     app.run(debug=True)
