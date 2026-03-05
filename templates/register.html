@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Register</h1>
+
+            <!-- flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                <li><strong>{{ category }}:</strong> {{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <label>Username:</label><br>
+                <input type="text" name="username"><br><br>
+
+                <label>Email (optional):</label><br>
+                <input type="email" name="email"><br><br>
+
+                <label>Password:</label><br>
+                <input type="password" name="password"><br><br>
+
+                <button type="submit">Create Account</button>
+            </form>
+
+            <p>Already have an account? <a href="/">Back to login</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

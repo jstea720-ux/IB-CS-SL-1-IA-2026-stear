@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reminders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Reminders</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                <li><strong>{{ category }}:</strong> {{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <label>Workout Plan:</label><br>
+                <select name="plan_id">
+                    <option value="">-- Select Plan --</option>
+                    {% for p in plans %}
+                    <option value="{{ p.plan_id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select><br><br>
+
+                <label>Date:</label><br>
+                <input type="date" name="date"><br><br>
+
+                <label>Time:</label><br>
+                <input type="time" name="time"><br><br>
+
+                <button type="submit">Download .ics Reminder</button>
+            </form>
+
+            <p><a href="/dashboard">Back to Dashboard</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

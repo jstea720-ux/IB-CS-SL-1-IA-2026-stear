@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Exercise Library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Exercise Library</h1>
+
+            <p><a href="/dashboard">Back to Dashboard</a></p>
+            <p><a href="/exercises/new">Add Exercise</a></p>
+
+            {% if exercises %}
+            <ul>
+                {% for ex in exercises %}
+                <li>
+                    <strong>{{ ex.name }}</strong> ({{ ex.muscle_group }}) - {{ ex.exercise_type }}
+                    | <a href="/exercises/{{ ex.exercise_id }}/edit">Edit</a>
+                    | <a href="/exercises/{{ ex.exercise_id }}/delete">Delete</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No exercises added yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

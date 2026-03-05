@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Log Workout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Log Workout</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                <li><strong>{{ category }}:</strong> {{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <label>Exercise:</label><br>
+                <select name="exercise_id">
+                    <option value="">-- Select Exercise --</option>
+                    {% for ex in exercises %}
+                    <option value="{{ ex.exercise_id }}">{{ ex.name }} ({{ ex.muscle_group }}, {{ ex.exercise_type }})
+                    </option>
+                    {% endfor %}
+                </select><br><br>
+
+                <label>Date:</label><br>
+                <input type="date" name="date"><br><br>
+
+                <label>Sets:</label><br>
+                <input type="number" name="sets" min="1"><br><br>
+
+                <label>Reps:</label><br>
+                <input type="number" name="reps" min="1"><br><br>
+
+                <label>Weight (optional):</label><br>
+                <input type="number" name="weight" min="0"><br><br>
+
+                <button type="submit">Save Entry</button>
+            </form>
+
+            <p><a href="/dashboard">Back to Dashboard</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

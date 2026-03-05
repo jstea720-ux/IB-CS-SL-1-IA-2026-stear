@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ mode }} Exercise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>{{ mode }} Exercise</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                <li><strong>{{ category }}:</strong> {{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <label>Name:</label><br>
+                <input type="text" name="name" value="{{ exercise.name if exercise else '' }}"><br><br>
+
+                <label>Muscle Group:</label><br>
+                <select name="muscle_group">
+                    <option value="">-- Select Muscle Group --</option>
+                    <option value="Chest" {{ "selected" if exercise and exercise.muscle_group=="Chest" else "" }}>Chest
+                    </option>
+                    <option value="Back" {{ "selected" if exercise and exercise.muscle_group=="Back" else "" }}>Back
+                    </option>
+                    <option value="Legs" {{ "selected" if exercise and exercise.muscle_group=="Legs" else "" }}>Legs
+                    </option>
+                    <option value="Shoulders" {{ "selected" if exercise and exercise.muscle_group=="Shoulders" else ""
+                        }}>
+                        Shoulders</option>
+                    <option value="Arms" {{ "selected" if exercise and exercise.muscle_group=="Arms" else "" }}>Arms
+                    </option>
+                    <option value="Core" {{ "selected" if exercise and exercise.muscle_group=="Core" else "" }}>Core
+                    </option>
+                    <option value="Full Body" {{ "selected" if exercise and exercise.muscle_group=="Full Body" else ""
+                        }}>Full
+                        Body</option>
+                </select><br><br>
+
+                <label>Type:</label><br>
+                <select name="exercise_type">
+                    <option value="">-- Select Type --</option>
+                    <option value="Strength" {{ "selected" if exercise and exercise.exercise_type=="Strength" else ""
+                        }}>
+                        Strength</option>
+                    <option value="Cardio" {{ "selected" if exercise and exercise.exercise_type=="Cardio" else "" }}>
+                        Cardio
+                    </option>
+                    <option value="Mobility" {{ "selected" if exercise and exercise.exercise_type=="Mobility" else ""
+                        }}>
+                        Mobility</option>
+                </select><br><br>
+
+
+                <button type="submit">{{ mode }}</button>
+            </form>
+
+            <p><a href="/exercises">Back to Exercise Library</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

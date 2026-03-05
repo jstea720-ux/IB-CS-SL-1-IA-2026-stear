@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Dashboard</h1>
+            <p class="small">Welcome, {{ current_user.username }}.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <div class="tile-grid">
+                <a class="tile" href="{{ url_for('exercises') }}">
+                    <div class="tile-title">Exercise Library</div>
+                    <div class="tile-desc">Add, edit, and organize exercises.</div>
+                </a>
+
+                <a class="tile" href="{{ url_for('create_plan') }}">
+                    <div class="tile-title">Create Plan</div>
+                    <div class="tile-desc">Build a workout plan with sets/reps.</div>
+                </a>
+
+                <a class="tile" href="{{ url_for('log_workout') }}">
+                    <div class="tile-title">Log Workout</div>
+                    <div class="tile-desc">Record sets, reps, weight, and date.</div>
+                </a>
+
+                <a class="tile" href="{{ url_for('progress') }}">
+                    <div class="tile-title">Progress</div>
+                    <div class="tile-desc">View progress graphs over time.</div>
+                </a>
+
+                <a class="tile" href="{{ url_for('reminders') }}">
+                    <div class="tile-title">Reminders</div>
+                    <div class="tile-desc">Download a calendar reminder (.ics).</div>
+                </a>
+
+                <a class="tile" href="{{ url_for('logout') }}">
+                    <div class="tile-title">Logout</div>
+                    <div class="tile-desc">End your session securely.</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
