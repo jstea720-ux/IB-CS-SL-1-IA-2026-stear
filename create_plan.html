@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Plan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+
+            <h1>Create Workout Plan</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" id="planForm">
+                <label>Plan Name</label>
+                <input type="text" name="name" required placeholder="e.g., Upper Body Day">
+
+                <h2>Add Exercises</h2>
+
+                <label>Select Exercise</label>
+                <select id="exerciseSelect">
+                    <option value="">-- Choose an exercise --</option>
+                    {% for ex in exercises %}
+                    <option value="{{ ex.exercise_id }}">{{ ex.name }} ({{ ex.muscle_group }}, {{ ex.exercise_type }})
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <button type="button" id="addExerciseBtn" style="margin-top:10px;">
+                    Add Exercise
+                </button>
+
+                <div id="selectedWrap" style="margin-top:14px;">
+                    <h2>Selected Exercises</h2>
+                    <p class="small">Enter sets and reps for each selected exercise.</p>
+
+                    <div id="selectedList"></div>
+                </div>
+
+                <!-- carrys plan items as json -->
+                <input type="hidden" name="items_json" id="itemsJson">
+
+                <button type="submit" style="margin-top:14px;">Create Plan</button>
+                <a class="btn btn-secondary" href="{{ url_for('dashboard') }}" style="margin-top:10px;">Back</a>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const select = document.getElementById("exerciseSelect");
+            const addBtn = document.getElementById("addExerciseBtn");
+            const list = document.getElementById("selectedList");
+            const itemsJson = document.getElementById("itemsJson");
+            const form = document.getElementById("planForm");
+
+            // Stores exercises by id so no duplicates
+            const items = {}; // { exercise_id: { id, name, sets, reps } }
+
+            function render() {
+                list.innerHTML = "";
+
+                const ids = Object.keys(items);
+                if (ids.length === 0) {
+                    list.innerHTML = '<p class="small">No exercises selected yet.</p>';
+                    itemsJson.value = "[]";
+                    return;
+                }
+
+                ids.forEach((id) => {
+                    const item = items[id];
+
+                    const row = document.createElement("div");
+                    row.className = "item";
+
+                    row.innerHTML = `
+        <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+          <div>
+            <strong>${item.name}</strong>
+            <div class="small">Exercise ID: ${item.id}</div>
+          </div>
+          <button type="button" class="btn btn-secondary" data-remove="${item.id}" style="width:auto;">
+            Remove
+          </button>
+        </div>
+
+        <div class="form-row" style="margin-top:10px;">
+          <div>
+            <label>Sets</label>
+            <input type="number" min="1" value="${item.sets}" data-sets="${item.id}" required>
+          </div>
+          <div>
+            <label>Reps</label>
+            <input type="number" min="1" value="${item.reps}" data-reps="${item.id}" required>
+          </div>
+        </div>
+      `;
+
+                    list.appendChild(row);
+                });
+
+                // update hidden json
+                const payload = Object.values(items).map(x => ({
+                    exercise_id: Number(x.id),
+                    sets: Number(x.sets),
+                    reps: Number(x.reps)
+                }));
+                itemsJson.value = JSON.stringify(payload);
+            }
+
+            addBtn.addEventListener("click", () => {
+                const id = select.value;
+                if (!id) return;
+
+                const name = select.options[select.selectedIndex].text;
+                if (items[id]) return; // avoid duplicates
+
+                items[id] = { id, name, sets: 3, reps: 10 };
+                render();
+            });
+
+            // update sets/reps and remove
+            list.addEventListener("input", (e) => {
+                const setsId = e.target.getAttribute("data-sets");
+                const repsId = e.target.getAttribute("data-reps");
+                if (setsId && items[setsId]) items[setsId].sets = e.target.value;
+                if (repsId && items[repsId]) items[repsId].reps = e.target.value;
+                render();
+            });
+
+            list.addEventListener("click", (e) => {
+                const removeId = e.target.getAttribute("data-remove");
+                if (removeId && items[removeId]) {
+                    delete items[removeId];
+                    render();
+                }
+            });
+
+            // validation on submit
+            form.addEventListener("submit", (e) => {
+                const payload = JSON.parse(itemsJson.value || "[]");
+                if (!payload.length) {
+                    e.preventDefault();
+                    alert("Please add at least one exercise to the plan.");
+                    return;
+                }
+            });
+
+            render();
+        })();
+    </script>
+
+</body>
+
+</html>
