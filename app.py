@@ -9,7 +9,9 @@ import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "ffhjds78yhuii389u3098jd8jdp3w9ud893jw89hw378h87dhw0po"
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL", "sqlite:///workout.db"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
@@ -347,5 +349,6 @@ if __name__ == "__main__":
         db.create_all()
 
     app.run(debug=True)
+
 
 
