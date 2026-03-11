@@ -344,12 +344,11 @@ def reminders():
     return render_template("reminders.html", plans=plans)
 
 
-with app.app_context():
-    db.create_all()
     # Create database tables the first time the app runs
 
 
     app.run(debug=True)
+
 
 
 
